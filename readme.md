@@ -55,6 +55,12 @@ Yes! If you like.
 However, this only works on OSX. That's just how life goes - until Windows has Applescript I don't think it's possible to interact with iTunes.
 I use applescript to play, pause, and generally make iTunes do things. No other way, as far as I know.
 
+Also! You need python3. Apparently it doesn't come installed by default on OSX, so you'll have to get it yourself. You do that by grabbing the installer from http://python.org/download/releases/3.2.2/ and running it. You could also do 
+
+	brew install python3
+
+if you have brew installed (which you should because package managers are pretty much the best thing). Thanks to Teddy Cross (@tkazec) for pointing it out to me!
+
 *ANYWAY* on OSX you can do 
 	
 	python3 ./fitunes.py play "till the world ends"
