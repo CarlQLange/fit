@@ -10,7 +10,9 @@ import os, sys, plistlib, time
 
 def main():
 	handleinput()
-
+	#for artist in artistnames():
+	#	print(artist)
+	
 
 ###Input handling section
 def handleinput():
@@ -34,26 +36,63 @@ def handleinput():
 		next()
 	elif ((cmd == "last") or (cmd == "prev")):
 		prev()
+	elif (cmd == "artist"):
+		st = time.time();
+		ar = bestmatch(inp, artistnames)
+		print("Playing %s" % ar)
+		playartist(ar)
+		print("Took %s seconds." % (time.time() - st))
 	elif (cmd == "play"):
 		st = time.time();
-		tr = bestmatch(inp)
+		tr = bestmatch(inp, tracknames)
 		print("Playing %s" % tr)
 		playtrack(tr)
 		print("Took %s seconds." % (time.time() - st))
 		#current()
 
 ###iTunes Library handling section
-#it's a plist so let's make it a dict
+lib = plistlib._InternalDict()
+
+def initlib():
+	global lib
+	if (lib == {}):
+		lib = plistlib.readPlist(os.environ['HOME']+"/Music/iTunes/iTunes Music Library.xml") #eww TODO move this somewhere better
+
 def tracknames():
-	lib = plistlib.readPlist(os.environ['HOME']+"/Music/iTunes/iTunes Music Library.xml") #eww TODO move this somewhere better
+	initlib()
 	for track in lib["Tracks"]:
-		yield lib["Tracks"][track]["Name"]
+		try:
+			lib["Tracks"][track]["Has Video"]
+		except KeyError:
+			#success!
+			yield lib["Tracks"][track]["Name"]
+
+def artistnames():
+	initlib()
+	artists = set()
+	for track in lib["Tracks"]:
+		try:
+			lib["Tracks"][track]["Has Video"]
+		except KeyError:
+			if lib["Tracks"][track]["Artist"] not in artists:
+				artists.add(lib["Tracks"][track]["Artist"])
+				yield lib["Tracks"][track]["Artist"]
+
+def gettrackbyartist(exactartistname):
+	initlib()
+	for track in lib["Tracks"]:
+		try:
+			if (lib["Tracks"][track]["Artist"] == exactartistname):
+				return(lib["Tracks"][track]["Name"])
+				break
+		except KeyError:
+			continue
 
 ###Fuzzy text section
 #TODO: I plan on making this a good bit better. Right now I'm going for fastest-possible solution and this works. Ish.
-def bestmatch(inp):
+def bestmatch(inp, matchto):
 	lowest = ("", 99999)
-	for trackname in tracknames():
+	for trackname in matchto():
 		if (levenshtein(inp, trackname) < lowest[1]):
 			lowest = (trackname, levenshtein(inp, trackname))
 
@@ -83,7 +122,7 @@ def current():
 	#print current track
 	osascript("""
         tell application "iTunes"
-            if not (exists current track) then return ""
+            if not (exists current track) then return "No song playing."
             return (get name of current track) & " by " & (get artist of current track)
         end tell
     """)
@@ -95,6 +134,9 @@ def playtrack(exacttrackname):
 			play track "%s"
 		end tell
 	""" % exacttrackname)
+
+def playartist(exactartistname):
+	playtrack(gettrackbyartist(exactartistname))
 
 def pause():
 	#pause or unpause the current track
@@ -121,6 +163,8 @@ def prev():
 	""")
 
 def osascript(str):
-	os.system("osascript -e '" + str + "'")
+	#below is a beautiful solution for this problem thanks to Teddy
+	#https://gist.github.com/1532172#gistcomment-71911
+	os.system("osascript - <<EOF" + str + "")
 
 main()
