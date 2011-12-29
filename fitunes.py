@@ -7,11 +7,10 @@
 #in this case it should play the track titled "Derezzed (Remixed By The Glitch Mob)"
 
 import os, sys, plistlib, time
+import gspeech
 
 def main():
 	handleinput()
-	#for artist in artistnames():
-	#	print(artist)
 	
 
 ###Input handling section
@@ -43,12 +42,18 @@ def handleinput():
 		playartist(ar)
 		print("Took %s seconds." % (time.time() - st))
 	elif (cmd == "play"):
-		st = time.time();
+		st = time.time()
 		tr = bestmatch(inp, tracknames)
 		print("Playing %s" % tr)
 		playtrack(tr)
 		print("Took %s seconds." % (time.time() - st))
 		#current()
+	elif (cmd == "listen"):
+		st = time.time()
+		tr = bestmatch(gspeech.send(gspeech.hear()), tracknames)
+		playtrack(tr)
+		#os.system("rm out.flac")
+		print("Took %s seconds." % (time.time() - st))
 
 ###iTunes Library handling section
 lib = plistlib._InternalDict()
