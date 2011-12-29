@@ -19,7 +19,7 @@ def handleinput():
 	try:
 		cmd = sys.argv[1]
 	except IndexError:
-		print("Usage: fit [track|current|pause|next|last|prev|play \"song title\"]")
+		print("Usage: fit [track|current|pause|next|last|prev|play \"song title\"|artist \"artist name\"|listen]")
 		return
 
 	try:
@@ -50,7 +50,8 @@ def handleinput():
 		#current()
 	elif (cmd == "listen"):
 		st = time.time()
-		tr = bestmatch(gspeech.send(gspeech.hear()), tracknames)
+		tr = bestmatch(gspeech.hearandinterpret(), tracknames)
+		print("Playing %s" % tr)
 		playtrack(tr)
 		#os.system("rm out.flac")
 		print("Took %s seconds." % (time.time() - st))
