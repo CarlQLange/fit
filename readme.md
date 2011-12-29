@@ -99,3 +99,6 @@ and it will move fit to ~/bin. (You might need to add ~/bin to your $PATH, who k
 
 	fit play "a close approximation to the name of the song you want to play"
 
+#####play artist
+
+	fit artist "a close approximation to the name of the artist you want to play"
