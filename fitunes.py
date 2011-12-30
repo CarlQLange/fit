@@ -38,7 +38,7 @@ def main():
 			tr = bestmatch(action[1][0], tracknames)
 			print("Playing %s" % tr)
 			playtrack(tr)
-		print("Took %s seconds." % (time.time() - st))
+		print("Took %s seconds." % round(time.time() - st, 3))
 	elif (action[0] == 'artistaction'):
 		st = time.time();
 		ar = bestmatch(action[1][0], artistnames)
