@@ -10,7 +10,8 @@ import os, sys, plistlib, time
 import recognise
 
 definitions = """
-playaction: {(play me|play|i want to listen to|i want to hear)@d1[by]@d2},
+playaction: {(play|i want to hear)@d1[by]@d2},
+artistaction: {(play songs by|play some songs by|i want to listen to)@d1},
 pauseaction: {(pause|stop|shut up for a second)},
 prevaction: {(previous song|previous|prev|last|go back|back|play the last song|play the previous song)},
 nextaction: {(next song|next|skip|play the next song|play another song)},
@@ -27,9 +28,22 @@ def main():
 	#print(action)
 	if (action[0] == 'playaction'):
 		st = time.time();
-		tr = bestmatch(action[1][0], tracknames)
-		print("Playing %s" % tr)
-		playtrack(tr)
+
+		if(len(action[1]) > 1):
+			ar = bestmatch(action[1][1], artistnames)
+			tr = bestmatch(action[1][0], tracksbyartist, arg=ar)
+			playtrackbyartist(tr, ar)
+			print("Playing {0} by {1}".format(tr,ar))
+		else:
+			tr = bestmatch(action[1][0], tracknames)
+			print("Playing %s" % tr)
+			playtrack(tr)
+		print("Took %s seconds." % (time.time() - st))
+	elif (action[0] == 'artistaction'):
+		st = time.time();
+		ar = bestmatch(action[1][0], artistnames)
+		print("Playing %s" % ar)
+		playartist(ar)
 		print("Took %s seconds." % (time.time() - st))
 	elif (action[0] == 'pauseaction'):
 		print("Paused")
@@ -93,7 +107,7 @@ def tracknames():
 		try:
 			lib["Tracks"][track]["Has Video"]
 		except KeyError:
-			#success!
+			#success! also what am i doing with these exceptions
 			yield lib["Tracks"][track]["Name"]
 
 def artistnames():
@@ -107,6 +121,15 @@ def artistnames():
 				artists.add(lib["Tracks"][track]["Artist"])
 				yield lib["Tracks"][track]["Artist"]
 
+def tracksbyartist(exactartistname):
+	initlib()
+	for track in lib["Tracks"]:
+		try:
+			lib["Tracks"][track]["Has Video"]
+		except KeyError:
+			if (lib["Tracks"][track]["Artist"] == exactartistname):
+				yield(lib["Tracks"][track]["Name"])
+
 def gettrackbyartist(exactartistname):
 	initlib()
 	for track in lib["Tracks"]:
@@ -119,12 +142,16 @@ def gettrackbyartist(exactartistname):
 
 ###Fuzzy text section
 #TODO: I plan on making this a good bit better. Right now I'm going for fastest-possible solution and this works. Ish.
-def bestmatch(inp, matchto):
+def bestmatch(inp, matchto, arg=""):
 	lowest = ("", 99999)
-	for trackname in matchto():
-		if (recognise.levenshtein(inp, trackname) < lowest[1]):
-			lowest = (trackname, recognise.levenshtein(inp, trackname))
-
+	if (arg != ""):
+		for trackname in matchto(arg):
+			if (recognise.levenshtein(inp, trackname) < lowest[1]):
+				lowest = (trackname, recognise.levenshtein(inp, trackname))
+	else:
+		for trackname in matchto():
+					if (recognise.levenshtein(inp, trackname) < lowest[1]):
+						lowest = (trackname, recognise.levenshtein(inp, trackname))
 	return lowest[0]
 
 ###iTunes controller section
@@ -147,6 +174,16 @@ def playtrack(exacttrackname):
 
 def playartist(exactartistname):
 	playtrack(gettrackbyartist(exactartistname))
+
+def playtrackbyartist(exacttrackname, exactartistname):
+	osascript("""
+		tell application "iTunes"
+			set mySongs to every track of library playlist 1 whose artist is "{0}" and name is "{1}"
+			repeat with song in mySongs
+				play song
+			end repeat
+		end tell
+	""".format(exactartistname, exacttrackname))
 
 def pause():
 	#pause or unpause the current track
