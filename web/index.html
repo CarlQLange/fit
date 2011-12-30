@@ -1,11 +1,62 @@
 <!doctype html>
 <html>
-  <head>
-  </head>
-  <body>
-   <form method="post">
-    <input name="inp" type="text" x-webkit-speech/>
-    <input type="submit"/>
-   </form>
-  </body>
+	<head>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script>
+		function main(){
+			var submit = function(){
+				$.post('/', {inp: $("#inp").val()}, function(){$("#inp").val("")})
+			}
+			$("#inp").keydown(function(e){
+				if (e.keyCode == 13){
+					submit()
+				}
+			})
+		}
+		</script>
+		<style type="text/css">
+		body {
+			background: #333
+		}
+		#backgroundtext{
+			position:absolute;
+			top:30px;
+			left:30px;
+			font: 4em "Lucida Grande", "Trebuchet MS", Verdana, sans-serif;
+			text-shadow:#222 -2px -2px;
+			color: #444;
+		}
+		#container{
+			margin:auto;
+			text-align: center;
+			padding-top: 200px;
+		}
+		#inp {
+			width: 400px;
+			height: 60px;
+			font: 3em "Lucida Grande", "Trebuchet MS", Verdana, sans-serif;
+		}
+		#submit {
+			font: 3em;
+			height: 60px;
+		}
+		#instructions {
+			padding-top:10px;
+			font: 1em "Lucida Grande", "Trebuchet MS", Verdana, sans-serif;
+		}
+		.example {
+			font: 1.1em "Lucida Grande", "Trebuchet MS", Verdana, sans-serif;
+		}
+		</style>
+	</head>
+	<body onload="main()">
+		<div id="backgroundtext">fit</div>
+		<div id="container">
+			<input id="inp" type="text" x-webkit-speech></input>
+			<div id="instructions">
+				tell itunes what you'd like it to do.<br/>
+				<span class="example">play midnight city by m83</span>
+			</div>
+		</div>
+	</body>
 </html>
