@@ -11,10 +11,10 @@ import recognise
 
 definitions = """
 playaction: {(play me|play|i want to listen to|i want to hear)@d1[by]@d2},
-pauseaction: {(pause)},
-nextaction: {(next song|next|skip)},
+pauseaction: {(pause|stop|shut up for a second)},
 prevaction: {(previous song|previous|prev|last|go back|back|play the last song|play the previous song)},
-currentaction: {(current|whats playing|what song is playing|what song is this|what track is this)}
+nextaction: {(next song|next|skip|play the next song|play another song)},
+currentaction: {(current|whats playing|what song is playing|what song is this|what track is this|whats the name of the current song)}
 """
 
 
@@ -22,19 +22,23 @@ def main():
 	#handleinput()
 	#for artist in artistnames():
 	#	print(artist)
-
+	
 	action = recognise.parse(sys.argv[1], definitions)
+	#print(action)
 	if (action[0] == 'playaction'):
 		st = time.time();
 		tr = bestmatch(action[1][0], tracknames)
 		print("Playing %s" % tr)
 		playtrack(tr)
 		print("Took %s seconds." % (time.time() - st))
-	elif (action[0] == 'prevaction'):
-		prev()
 	elif (action[0] == 'pauseaction'):
+		print("Paused")
 		pause()
+	elif (action[0] == 'prevaction'):
+		print("Previous song")
+		prev()	
 	elif (action[0] == 'nextaction'):
+		print("Next song")
 		next()
 	elif (action[0] == 'currentaction'):
 		current()

@@ -24,17 +24,20 @@ def parse(inp, definitions):
 			seperators = splitmultipler.findall(seperatorsstr)
 
 		for actionw in actionwords:
-			threshold = 8
+			threshold = 0 #need to make a loop here so you can get less accurate if a match isn't found
 			
-			if (levenshtein(actionw, inp) < threshold): #less accurate, easier to use?
-			#if (re.match(actionw, inp)):
-				data = []
-				datas = inp
-				datas = inp.replace(actionw, "")
-				for seperator in seperators:
-					data = datas.split(seperator)
+			while(threshold < 5):
+				#print("Threshold: %s" % threshold)
+				if (levenshtein(actionw, inp) <= threshold): #less accurate, easier to use?
+				#if (re.match(actionw, inp)):
+					data = []
+					datas = inp
+					datas = inp.replace(actionw, "")
+					for seperator in seperators:
+						data = datas.split(seperator)
 
-				return(getactionname.findall(action)[0], data)
+					return(getactionname.findall(action)[0], data)
+				threshold+=1
 
 	
 #stolen from http://en.wikibooks.org/wiki/Algorithm_implementation/Strings/Levenshtein_distance#Python
