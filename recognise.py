@@ -24,14 +24,10 @@ def parse(inp, definitions):
 			seperators = splitmultipler.findall(seperatorsstr)
 
 		for actionw in actionwords:
-			#threshold = 0 #need to make a _better_ loop here so you can get less accurate if a match isn't found
+			threshold = 5
 			
-			#while(threshold < 8):
-				#print("Threshold: %s" % threshold)
-				#if (levenshtein(actionw, inp[0:4]) <= threshold): #less accurate, easier to use?
-				#print(actionw)
-			
-			if (re.match(actionw, inp, flags=re.I)):
+			if (levenshtein(actionw, inp[0:8]) < threshold):
+#			if (re.match(actionw, inp, flags=re.I)):
 				data = []
 				datas = inp
 				datas = inp.replace(actionw, "")

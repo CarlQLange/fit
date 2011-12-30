@@ -14,7 +14,7 @@ import recognise
 definitions = """
 prevaction: {(previous song|previous|prev|last|go back|back|play the last song|play the previous song)},
 nextaction: {(next song|next|skip|play the next song|play another song)},
-artistaction: {(play songs by|play some songs by|i want to listen to)@d1},
+artistaction: {(play songs by|play track by|play music by|play some songs by|i want to listen to)@d1},
 playaction: {(play|i want to hear)@d1[by]@d2},
 pauseaction: {(pause|stop|shut up for a second)},
 currentaction: {(current|whats playing|what song is playing|what song is this|what track is this|whats the name of the current song)}
