@@ -10,11 +10,11 @@ import os, sys, plistlib, time
 import recognise
 
 definitions = """
+prevaction: {(previous song|previous|prev|last|go back|back|play the last song|play the previous song)},
+nextaction: {(next song|next|skip|play the next song|play another song)},
 playaction: {(play|i want to hear)@d1[by]@d2},
 artistaction: {(play songs by|play some songs by|i want to listen to)@d1},
 pauseaction: {(pause|stop|shut up for a second)},
-prevaction: {(previous song|previous|prev|last|go back|back|play the last song|play the previous song)},
-nextaction: {(next song|next|skip|play the next song|play another song)},
 currentaction: {(current|whats playing|what song is playing|what song is this|what track is this|whats the name of the current song)}
 """
 

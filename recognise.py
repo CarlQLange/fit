@@ -24,18 +24,22 @@ def parse(inp, definitions):
 			seperators = splitmultipler.findall(seperatorsstr)
 
 		for actionw in actionwords:
-			threshold = 0 #need to make a _better_ loop here so you can get less accurate if a match isn't found
+			#threshold = 0 #need to make a _better_ loop here so you can get less accurate if a match isn't found
 			
-			while(threshold < 8):
+			#while(threshold < 8):
 				#print("Threshold: %s" % threshold)
 				#if (levenshtein(actionw, inp[0:4]) <= threshold): #less accurate, easier to use?
+				#print(actionw)
 				if (re.match(actionw, inp)):
 					data = []
 					datas = inp
 					datas = inp.replace(actionw, "")
 					#print(datas)
-					for seperator in seperators:
-						data = datas.split(seperator)
+					if getseperatorsr.search(action):
+						for seperator in seperators:
+							data = datas.split(seperator)
+					else:
+						data = datas
 					#print(data)
 					return(getactionname.findall(action)[0], data)
 				#threshold+=1
