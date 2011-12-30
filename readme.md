@@ -61,6 +61,10 @@ Also! You need python3. Apparently it doesn't come installed by default on OSX, 
 
 if you have brew installed (which you should because package managers are pretty much the best thing). Thanks to Teddy Cross (@tkazec) for pointing it out to me!
 
+For speech support you need sox installed.
+
+	brew install sox
+
 *ANYWAY* on OSX you can do 
 	
 	python3 ./fitunes.py play "till the world ends"
@@ -102,3 +106,7 @@ and it will move fit to ~/bin. (You might need to add ~/bin to your $PATH, who k
 #####play artist
 
 	fit artist "a close approximation to the name of the artist you want to play"
+
+#####speech
+
+	fit listen
