@@ -7,12 +7,37 @@
 #in this case it should play the track titled "Derezzed (Remixed By The Glitch Mob)"
 
 import os, sys, plistlib, time
+import recognise
+
+definitions = """
+playaction: {(play me|play|i want to listen to|i want to hear)@d1[by]@d2},
+pauseaction: {(pause)},
+nextaction: {(next song|next|skip)},
+prevaction: {(previous song|previous|prev|last|go back|back|play the last song|play the previous song)},
+currentaction: {(current|whats playing|what song is playing|what song is this|what track is this)}
+"""
+
 
 def main():
-	handleinput()
+	#handleinput()
 	#for artist in artistnames():
 	#	print(artist)
-	
+
+	action = recognise.parse(sys.argv[1], definitions)
+	if (action[0] == 'playaction'):
+		st = time.time();
+		tr = bestmatch(action[1][0], tracknames)
+		print("Playing %s" % tr)
+		playtrack(tr)
+		print("Took %s seconds." % (time.time() - st))
+	elif (action[0] == 'prevaction'):
+		prev()
+	elif (action[0] == 'pauseaction'):
+		pause()
+	elif (action[0] == 'nextaction'):
+		next()
+	elif (action[0] == 'currentaction'):
+		current()
 
 ###Input handling section
 def handleinput():
@@ -93,29 +118,10 @@ def gettrackbyartist(exactartistname):
 def bestmatch(inp, matchto):
 	lowest = ("", 99999)
 	for trackname in matchto():
-		if (levenshtein(inp, trackname) < lowest[1]):
-			lowest = (trackname, levenshtein(inp, trackname))
+		if (recognise.levenshtein(inp, trackname) < lowest[1]):
+			lowest = (trackname, recognise.levenshtein(inp, trackname))
 
 	return lowest[0]
-
-#stolen from http://en.wikibooks.org/wiki/Algorithm_implementation/Strings/Levenshtein_distance#Python
-def levenshtein(s1, s2):
-    if len(s1) < len(s2):
-        return levenshtein(s2, s1)
-    if not s1:
-        return len(s2)
- 
-    previous_row = range(len(s2) + 1)
-    for i, c1 in enumerate(s1):
-        current_row = [i + 1]
-        for j, c2 in enumerate(s2):
-            insertions = previous_row[j + 1] + 1
-            deletions = current_row[j] + 1       
-            substitutions = previous_row[j] + (c1 != c2)
-            current_row.append(min(insertions, deletions, substitutions))
-        previous_row = current_row
- 
-    return previous_row[-1]
 
 ###iTunes controller section
 def current():

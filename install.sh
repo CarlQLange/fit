@@ -9,5 +9,5 @@ cp -v ./fit ~/bin
 echo "rm ./fit"
 rm ./fit
 echo ""
-echo "You might have to add ~/bin to your \$PATH, unless it's already there which it's not by default." #todo do this autmoatically I guess?
+echo "You might have to add ~/bin to your \$PATH. Yep. Unless it's already there which it's not by default."
 echo "Done! Type \"fit play 'a song you like'\" to get started!"
