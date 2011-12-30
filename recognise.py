@@ -14,7 +14,7 @@ def parse(inp, definitions):
 	getseperatorsr = re.compile(r'\[([^}]+)\]')
 
 	actions = getactions.findall(definitions)
-	#print(actions)
+	
 	for action in actions:
 		actionwordsstr = getactionwordsr.findall(action)[0]
 		actionwords = splitmultipler.findall(actionwordsstr)
@@ -30,18 +30,19 @@ def parse(inp, definitions):
 				#print("Threshold: %s" % threshold)
 				#if (levenshtein(actionw, inp[0:4]) <= threshold): #less accurate, easier to use?
 				#print(actionw)
-				if (re.match(actionw, inp)):
-					data = []
-					datas = inp
-					datas = inp.replace(actionw, "")
-					#print(datas)
-					if getseperatorsr.search(action):
-						for seperator in seperators:
-							data = datas.split(seperator)
-					else:
-						data = datas
-					#print(data)
-					return(getactionname.findall(action)[0], data)
+			
+			if (re.match(actionw, inp, flags=re.I)):
+				data = []
+				datas = inp
+				datas = inp.replace(actionw, "")
+				#print(datas)
+				if getseperatorsr.search(action):
+					for seperator in seperators:
+						data = datas.split(seperator)
+				else:
+					data.append(datas)
+				#print(data)
+				return(getactionname.findall(action)[0], data)
 				#threshold+=1
 
 #stolen from http://en.wikibooks.org/wiki/Algorithm_implementation/Strings/Levenshtein_distance#Python

@@ -14,93 +14,53 @@ import recognise
 definitions = """
 prevaction: {(previous song|previous|prev|last|go back|back|play the last song|play the previous song)},
 nextaction: {(next song|next|skip|play the next song|play another song)},
-playaction: {(play|i want to hear)@d1[by]@d2},
 artistaction: {(play songs by|play some songs by|i want to listen to)@d1},
+playaction: {(play|i want to hear)@d1[by]@d2},
 pauseaction: {(pause|stop|shut up for a second)},
 currentaction: {(current|whats playing|what song is playing|what song is this|what track is this|whats the name of the current song)}
 """
 
 
 def main():
-	#handleinput()
-	#for artist in artistnames():
-	#	print(artist)
-	
-	action = recognise.parse(sys.argv[1], definitions)
-	#print(action)
-	if (action[0] == 'playaction'):
-		st = time.time();
-
-		if(len(action[1]) > 1):
-			ar = bestmatch(action[1][1], artistnames)
-			tr = bestmatch(action[1][0], tracksbyartist, arg=ar)
-			playtrackbyartist(tr, ar)
-			print("Playing {0} by {1}".format(tr,ar))
-		else:
-			tr = bestmatch(action[1][0], tracknames)
-			print("Playing %s" % tr)
-			playtrack(tr)
-		print("Took %s seconds." % round(time.time() - st, 3))
-	elif (action[0] == 'artistaction'):
-		st = time.time();
-		ar = bestmatch(action[1][0], artistnames)
-		print("Playing %s" % ar)
-		playartist(ar)
-		print("Took %s seconds." % (time.time() - st))
-	elif (action[0] == 'pauseaction'):
-		print("Paused")
-		pause()
-	elif (action[0] == 'prevaction'):
-		print("Previous song")
-		prev()	
-	elif (action[0] == 'nextaction'):
-		print("Next song")
-		next()
-	elif (action[0] == 'currentaction'):
-		current()
-
-###Input handling section
-def handleinput():
-	#cache the args
-	try:
-		cmd = sys.argv[1]
-	except IndexError:
-		print("Usage: fit [track|current|pause|next|last|prev|play \"song title\"|artist \"artist name\"|listen]")
-		return
+	if sys.argv[1] == 'listen':
+		action = recognise.parse(gspeech.hearandinterpret(), definitions)
+	else:
+		action = recognise.parse(sys.argv[1], definitions)
+	print(action)
 
 	try:
-		inp = sys.argv[2]
-	except IndexError:
-		inp = ""
+		if (action[0] == 'playaction'):
+			st = time.time();
 
-	if (((cmd == "track") or (cmd == "current")) and (inp == "")):
-		current()
-	elif (cmd == "pause"):
-		pause()
-	elif (cmd == "next"):
-		next()
-	elif ((cmd == "last") or (cmd == "prev")):
-		prev()
-	elif (cmd == "artist"):
-		st = time.time();
-		ar = bestmatch(inp, artistnames)
-		print("Playing %s" % ar)
-		playartist(ar)
-		print("Took %s seconds." % (time.time() - st))
-	elif (cmd == "play"):
-		st = time.time()
-		tr = bestmatch(inp, tracknames)
-		print("Playing %s" % tr)
-		playtrack(tr)
-		print("Took %s seconds." % (time.time() - st))
-		#current()
-	elif (cmd == "listen"):
-		st = time.time()
-		tr = bestmatch(gspeech.hearandinterpret(), tracknames)
-		print("Playing %s" % tr)
-		playtrack(tr)
-		#os.system("rm out.flac")
-		print("Took %s seconds." % (time.time() - st))
+			if(len(action[1]) > 1):
+				ar = bestmatch(action[1][1], artistnames)
+				tr = bestmatch(action[1][0], tracksbyartist, arg=ar)
+				playtrackbyartist(tr, ar)
+				print("Playing {0} by {1}".format(tr,ar))
+			else:
+				tr = bestmatch(action[1][0], tracknames)
+				print("Playing %s" % tr)
+				playtrack(tr)
+			print("Took {0} seconds.".format(round(time.time() - st, 3)))
+		elif (action[0] == 'artistaction'):
+			st = time.time();
+			ar = bestmatch(action[1][0], artistnames)
+			print("Playing %s" % ar)
+			playartist(ar)
+			print("Took {0} seconds.".format(round(time.time() - st, 3)))
+		elif (action[0] == 'pauseaction'):
+			print("Paused")
+			pause()
+		elif (action[0] == 'prevaction'):
+			print("Previous song")
+			prev()	
+		elif (action[0] == 'nextaction'):
+			print("Next song")
+			next()
+		elif (action[0] == 'currentaction'):
+			current()
+	except TypeError:
+		print("Couldn't understand the input!")
 
 ###iTunes Library handling section
 lib = plistlib._InternalDict()
@@ -152,6 +112,7 @@ def gettrackbyartist(exactartistname):
 ###Fuzzy text section
 #TODO: I plan on making this a good bit better. Right now I'm going for fastest-possible solution and this works. Ish.
 def bestmatch(inp, matchto, arg=""):
+	print(inp)
 	lowest = ("", 99999)
 	if (arg != ""):
 		for trackname in matchto(arg):
@@ -177,9 +138,9 @@ def playtrack(exacttrackname):
 	#play the track with the **EXACT** track name
 	osascript("""
 		tell application "iTunes"
-			play track "%s"
+			play track "{0}"
 		end tell
-	""" % exacttrackname)
+	""".format(exacttrackname))
 
 def playartist(exactartistname):
 	playtrack(gettrackbyartist(exactartistname))
