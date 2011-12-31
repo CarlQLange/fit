@@ -12,5 +12,6 @@ class posthandler(SimpleHTTPRequestHandler):
 
 def serve():
 	print("Serving on port 5171.")
+	print("Go to 127.0.0.1:5171/_fit/web in your browser!")
 	httpd = HTTPServer(('127.0.0.1', 5171), posthandler)
 	httpd.serve_forever()
