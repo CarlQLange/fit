@@ -7,9 +7,7 @@
 #in this case it should play the track titled "Derezzed (Remixed By The Glitch Mob)"
 
 import os, sys, plistlib, time
-
-import gspeech
-import recognise
+from _fit import gspeech, recognise
 
 definitions = """
 prevaction: {(previous song|previous|prev|last|go back|back|play the last song|play the previous song)},
@@ -24,6 +22,10 @@ currentaction: {(current|whats playing|what song is playing|what song is this|wh
 def main():
 	if sys.argv[1] == 'listen':
 		action = recognise.parse(gspeech.hearandinterpret(), definitions)
+	elif sys.argv[1] == 'serve':
+		from _fit.web import server
+		server.serve()
+		return
 	else:
 		action = recognise.parse(sys.argv[1], definitions)
 	print(action)
