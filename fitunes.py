@@ -28,7 +28,7 @@ def main():
 		return
 	else:
 		action = recognise.parse(sys.argv[1], definitions)
-	print(action)
+	#print(action)
 
 	try:
 		if (action[0] == 'playaction'):
@@ -114,7 +114,7 @@ def gettrackbyartist(exactartistname):
 ###Fuzzy text section
 #TODO: I plan on making this a good bit better. Right now I'm going for fastest-possible solution and this works. Ish.
 def bestmatch(inp, matchto, arg=""):
-	print(inp)
+	#print(inp)
 	lowest = ("", 99999)
 	if (arg != ""):
 		for trackname in matchto(arg):

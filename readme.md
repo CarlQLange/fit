@@ -3,56 +3,45 @@ fit - a basically psychic iTunes controller, kind of
 
 The fastest way to show how how this is cool is to show you. This is how it goes:
 
-	~ $ fit play "guitar and a heart" 
-	Playing A Guitar and A Heart
-	Took 5.4229278564453125 seconds.
+	~ $ fit "play some songs by the foo fighters"
+	Playing Everlong by Foo Fighters
+	Took 3.789 seconds.
 	~ $ 
 
 ##So basically
 
-fit works by (currently) getting the Levenshtein distance of what you typed and checking it against *all* the songs in your iTunes library and getting the best match. 
-It's pretty sweet!
+fit is an iTunes controller that tries to understand natural English commands.
+
+I wrote fit as a command-line application so I wouldn't have to tab out of vim to change my song. It's since gotten a web interface too, so you can do it from your browser. AND it has speech support so you can talk to it!
 
 ##it still sucks though
 
+fit works by getting the Levenshtein distance from your input to the songs in your iTunes library. (Levenshtein distance is basically an easy way to measure how different two strings are)
+
 Levenshtein distance is _very_ imperfect for this usage. For example:
 
-	~ $ fit play "lower your eyelids"
-	Playing Open Your Eyes
-	Took 5.201683044433594 seconds.
-	~ $ fit play "lower your eyelids to die"
-	Playing How Your Heart Is Wired
-	Took 5.951024055480957 seconds.
+	~ $ fit "play lower your eyelids"
+	Playing Know your enemy
+	Took 5.429 seconds.
+	~ $ fit "play lower your eyelids to die"
+	Playing Closer To The Edge
+	Took 5.835 seconds.
+	~ $ fit "play lower your eyelids to die with the"
+	Playing Lower Your Eyelids To Die With The Sun
+	Took 6.485 seconds.
+	~ $ 
 
 That _should_ have played M83's awesome 3am song "Lower Your Eyelids To Die With The Sun" BUT IT DIDN'T.
 
-I have plans to fix this though.
+However, you can narrow down what you want by, for example, telling fit who plays the song. (This still doesn't work for the above example, because Levenshtein distance doesn't equalse the length of the strings)
 
-##OH REALLY
-
-Yes. Because I get _so_ much information from the iTunes library, there's a lot more context I should be using.
-I should be, for example, able to handle 
-	
-	~ $ fit play "coldplay"
-
-or 
-	
-	~ $ fit play "a song by anamanaguchi"
-
-or 
-
-	~ $ fit play "a song I like but haven't heard in a while"
-
-(By using artists, play count, last play date, etc.)
-
-Obviously, Levenshtein distance sucks for all of this and I'll probably need to do some actual language processing (or I can hide it behind a whole bunch of if statements because nobody knows the difference right?). I'm not doing that right now because it's 9am and I've been awake all night. 
-*But!* This is cool and I'll keep working on it. _Probably_.
+Also, speech support is flaky. This mightn't be the case for you, but it has a damn hard time understanding my irish accent.
 
 ##Can I use it right now?
 
 Yes! If you like. 
 
-However, this only works on OSX. That's just how life goes - until Windows has Applescript I don't think it's possible to interact with iTunes.
+However, this only works on OSX. That's just how life goes - until Windows has Applescript (as in, never) I don't think it's possible to interact with iTunes.
 I use applescript to play, pause, and generally make iTunes do things. No other way, as far as I know.
 
 Also! You need python3. Apparently it doesn't come installed by default on OSX, so you'll have to get it yourself. You do that by grabbing the installer from http://python.org/download/releases/3.2.2/ and running it. You could also do 
@@ -61,13 +50,14 @@ Also! You need python3. Apparently it doesn't come installed by default on OSX, 
 
 if you have brew installed (which you should because package managers are pretty much the best thing). Thanks to Teddy Cross (@tkazec) for pointing it out to me!
 
-For speech support you need sox installed.
+For speech support you need sox installed. Note that fit runs fine without this though, and you still get speech support in-browser (if your browser supports x-webkit-speech).
 
 	brew install sox
 
 *ANYWAY* on OSX you can do 
 	
-	python3 ./fitunes.py play "till the world ends"
+	~ $ cd /where/you/downloaded/fit/to
+	/where/you/downloaded/fit/to $ python3 ./fitunes.py "play till the world ends"
 
 and it will probably work! Maybe!
 
@@ -75,38 +65,15 @@ and it will probably work! Maybe!
 
 You can actually install fit as an executable-type-thing! Just do 
 
-	python3 ./install.py
+	~ $ cd /where/you/downloaded/fit/to
+	/where/you/downloaded/fit/to $ python3 ./install.py
 
-and it will move fit to ~/bin. (You might need to add ~/bin to your $PATH, who knows).
+and then you can do
 
-##but wait! there's more! (usage)
+	~ $ fit "play densmore by anamanaguchi"
 
-#####(un)pausing itunes
- 
- 	fit pause
+or you can do 
+	
+	~ $ fit serve
 
-#####next track
- 
- 	fit next
-
-#####previous track
-
-	fit prev
-	fit last
-
-#####current track
-
-	fit current
-	fit track
-
-#####play song
-
-	fit play "a close approximation to the name of the song you want to play"
-
-#####play artist
-
-	fit artist "a close approximation to the name of the artist you want to play"
-
-#####speech
-
-	fit listen
+and then point your browser at 127.0.0.1:5171/_fit/web/ (this is probably what you want to do if you don't use the command-line much)
