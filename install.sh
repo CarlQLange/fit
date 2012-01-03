@@ -18,4 +18,4 @@ if [[ ":$PATH:" != *":$HOME/bin:"* ]]; then
 fi
 
 echo ""
-echo "Done! Type \"fit play 'a song you like'\" to get started!"
+echo "Done! Type \"fit 'play a song you like'\" to get started!"

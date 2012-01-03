@@ -24,10 +24,10 @@ def parse(inp, definitions):
 			seperators = splitmultipler.findall(seperatorsstr)
 
 		for actionw in actionwords:
-			threshold = 5
+#			threshold = 5
 			
-			if (levenshtein(actionw, inp[0:8]) < threshold):
-#			if (re.match(actionw, inp, flags=re.I)):
+#			if (levenshtein(actionw, inp) < threshold):
+			if (re.match(actionw, inp, flags=re.I)):
 				data = []
 				datas = inp
 				datas = inp.replace(actionw, "")
@@ -60,3 +60,4 @@ def levenshtein(s1, s2):
         previous_row = current_row
  
     return previous_row[-1]
+    

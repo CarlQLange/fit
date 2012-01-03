@@ -10,12 +10,13 @@ import os, sys, plistlib, time
 from _fit import gspeech, recognise
 
 definitions = """
+playaction: {(play|i want to hear)@d1[by]@d2},
 prevaction: {(previous song|previous|prev|last|go back|back|play the last song|play the previous song)},
 nextaction: {(next song|next|skip|play the next song|play another song)},
 artistaction: {(play songs by|play track by|play music by|play some songs by|i want to listen to)@d1},
-playaction: {(play|i want to hear)@d1[by]@d2},
 pauseaction: {(pause|stop|shut up for a second)},
-currentaction: {(current|whats playing|what song is playing|what song is this|what track is this|whats the name of the current song)}
+currentaction: {(current|whats playing|what song is playing|what song is this|what track is this|whats the name of the current song)},
+mailaction: {(email|mail)@d1}
 """
 
 
@@ -61,6 +62,8 @@ def main():
 			next()
 		elif (action[0] == 'currentaction'):
 			current()
+		elif (action[0] == 'mailaction'):
+			mail(action[1][0].lstrip())
 	except TypeError:
 		print("Couldn't understand the input!")
 
@@ -180,6 +183,17 @@ def prev():
 			previous track
 		end tell
 	""")
+
+def mail(exactpersonname):
+	osascript("""
+		tell application "Address Book"
+			set v to value of second email of person "{0}"
+		end tell
+		set vv to "mailto:" & v
+		tell application "Mail"
+			mailto vv
+		end tell
+	""".format(exactpersonname))
 
 def osascript(str):
 	#below is a beautiful solution for this problem thanks to Teddy
