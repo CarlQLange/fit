@@ -1,6 +1,6 @@
 #!/usr/local/bin/python3
 
-import urllib.request,urllib.parse,urllib.error 
+import urllib.request,urllib.parse,urllib.error
 import socket
 import json
 import subprocess

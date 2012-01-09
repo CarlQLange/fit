@@ -1,7 +1,7 @@
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 import urllib
 import os
- 
+
 class posthandler(SimpleHTTPRequestHandler):
 	def do_POST(self):
 		length = int(self.headers['Content-Length'])
