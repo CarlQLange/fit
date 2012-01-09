@@ -55,7 +55,7 @@ def main():
 			pause()
 		elif (action[0] == 'prevaction'):
 			print("Previous song")
-			prev()	
+			prev()
 		elif (action[0] == 'nextaction'):
 			print("Next song")
 			next()
@@ -130,11 +130,11 @@ def bestmatch(inp, matchto, arg=""):
 def current():
 	#print current track
 	osascript("""
-        tell application "iTunes"
-            if not (exists current track) then return "No song playing."
-            return (get name of current track) & " by " & (get artist of current track)
-        end tell
-    """)
+		tell application "iTunes"
+			if not (exists current track) then return "No song playing."
+			return (get name of current track) & " by " & (get artist of current track)
+		end tell
+	""")
 
 def playtrack(exacttrackname):
 	#play the track with the **EXACT** track name
