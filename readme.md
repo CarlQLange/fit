@@ -33,7 +33,7 @@ Levenshtein distance is _very_ imperfect for this usage. For example:
 
 That _should_ have played M83's awesome 3am song "Lower Your Eyelids To Die With The Sun" BUT IT DIDN'T.
 
-However, you can narrow down what you want by, for example, telling fit who plays the song. (This still doesn't work for the above example, because Levenshtein distance doesn't equalse the length of the strings)
+However, you can narrow down what you want by, for example, telling fit who plays the song. (This still doesn't work for the above example, because Levenshtein distance doesn't equalise the length of the strings)
 
 Also, speech support is flaky. This mightn't be the case for you, but it has a damn hard time understanding my irish accent.
 
@@ -48,7 +48,7 @@ Also! You need python3. Apparently it doesn't come installed by default on OSX, 
 
 	brew install python3
 
-if you have brew installed (which you should because package managers are pretty much the best thing). Thanks to Teddy Cross (@tkazec) for pointing it out to me!
+if you have brew installed (which you should because package managers are pretty much the best thing). Thanks to Teddy Cross (@tkazec) for pointing this out to me!
 
 For speech support you need sox installed. Note that fit runs fine without this though, and you still get speech support in-browser (if your browser supports x-webkit-speech).
 
@@ -56,8 +56,8 @@ For speech support you need sox installed. Note that fit runs fine without this 
 
 *ANYWAY* on OSX you can do 
 	
-	~ $ cd /where/you/downloaded/fit/to
-	/where/you/downloaded/fit/to $ python3 ./fitunes.py "play till the world ends"
+	 $ cd /where/you/downloaded/fit/to
+	 $ python3 ./fitunes.py "play till the world ends"
 
 and it will probably work! Maybe!
 
@@ -65,8 +65,8 @@ and it will probably work! Maybe!
 
 You can actually install fit as an executable-type-thing! Just do 
 
-	~ $ cd /where/you/downloaded/fit/to
-	/where/you/downloaded/fit/to $ python3 ./install.py
+	 $ cd /where/you/downloaded/fit/to
+	 $ ./install.sh
 
 and then you can do
 
