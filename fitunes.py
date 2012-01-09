@@ -2,7 +2,7 @@
 
 #fuzzy itunes controller
 #intended use:
-# $ play "derezzed remix"
+# $ fit "play derezzed remix"
 #if there is no track titled that, look around for a fuzzy match
 #in this case it should play the track titled "Derezzed (Remixed By The Glitch Mob)"
 
@@ -38,7 +38,7 @@ def main():
 				ar = bestmatch(action[1][1], artistnames)
 				tr = bestmatch(action[1][0], tracksbyartist, arg=ar)
 				playtrackbyartist(tr, ar)
-				print("Playing {0} by {1}".format(tr,ar))
+				print("Playing {0} by {1}".format(tr, ar))
 			else:
 				tr = bestmatch(action[1][0], tracknames)
 				print("Playing %s" % tr)
@@ -55,14 +55,14 @@ def main():
 			pause()
 		elif (action[0] == 'prevaction'):
 			print("Previous song")
-			prev()	
+			prev()
 		elif (action[0] == 'nextaction'):
 			print("Next song")
 			next()
 		elif (action[0] == 'currentaction'):
 			current()
 	except TypeError:
-		print("Couldn't understand the input!")
+		print("Couldn't understand the input! (TypeError)")
 
 ###iTunes Library handling section
 lib = plistlib._InternalDict()
@@ -130,11 +130,11 @@ def bestmatch(inp, matchto, arg=""):
 def current():
 	#print current track
 	osascript("""
-        tell application "iTunes"
-            if not (exists current track) then return "No song playing."
-            return (get name of current track) & " by " & (get artist of current track)
-        end tell
-    """)
+		tell application "iTunes"
+			if not (exists current track) then return "No song playing."
+			return (get name of current track) & " by " & (get artist of current track)
+		end tell
+	""")
 
 def playtrack(exacttrackname):
 	#play the track with the **EXACT** track name
