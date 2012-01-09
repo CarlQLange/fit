@@ -10,6 +10,7 @@ import os, sys, plistlib, time
 from _fit import gspeech, recognise
 
 definitions = """
+listaction: {(list songs by)@d1},
 prevaction: {(previous song|previous|prev|last|go back|back|play the last song|play the previous song)},
 nextaction: {(next song|next|skip|play the next song|play another song)},
 artistaction: {(play songs by|play track by|play music by|play some songs by|i want to listen to)@d1},
@@ -61,6 +62,8 @@ def main():
 			next()
 		elif (action[0] == 'currentaction'):
 			current()
+		elif (action[0] == 'listaction'):
+			listsongsbyartist(action[1][0])
 	except TypeError:
 		print("Couldn't understand the input! (TypeError)")
 
@@ -118,12 +121,13 @@ def bestmatch(inp, matchto, arg=""):
 	lowest = ("", 99999)
 	if (arg != ""):
 		for trackname in matchto(arg):
-			if (recognise.levenshtein(inp, trackname) < lowest[1]):
-				lowest = (trackname, recognise.levenshtein(inp, trackname))
+			if (recognise.match(inp, trackname) < lowest[1]):
+				lowest = (trackname, recognise.match(inp, trackname))
+				print(lowest)
 	else:
 		for trackname in matchto():
-					if (recognise.levenshtein(inp, trackname) < lowest[1]):
-						lowest = (trackname, recognise.levenshtein(inp, trackname))
+			if (recognise.match(inp, trackname) < lowest[1]):
+				lowest = (trackname, recognise.match(inp, trackname))
 	return lowest[0]
 
 ###iTunes controller section
@@ -156,6 +160,16 @@ def playtrackbyartist(exacttrackname, exactartistname):
 			end repeat
 		end tell
 	""".format(exactartistname, exacttrackname))
+
+def listsongsbyartist(exactartistname):
+	osascript("""
+		tell application "iTunes"
+			set mySongs to every track of library playlist 1 whose artist is "Draper" -- and name is "{1}"
+			repeat with song in mySongs
+				log(get name of song)
+			end repeat
+		end tell
+	""")
 
 def pause():
 	#pause or unpause the current track
