@@ -2,7 +2,7 @@
 
 #fuzzy itunes controller
 #intended use:
-# $ play "derezzed remix"
+# $ fit "play derezzed remix"
 #if there is no track titled that, look around for a fuzzy match
 #in this case it should play the track titled "Derezzed (Remixed By The Glitch Mob)"
 
@@ -38,7 +38,7 @@ def main():
 				ar = bestmatch(action[1][1], artistnames)
 				tr = bestmatch(action[1][0], tracksbyartist, arg=ar)
 				playtrackbyartist(tr, ar)
-				print("Playing {0} by {1}".format(tr,ar))
+				print("Playing {0} by {1}".format(tr, ar))
 			else:
 				tr = bestmatch(action[1][0], tracknames)
 				print("Playing %s" % tr)
@@ -62,7 +62,7 @@ def main():
 		elif (action[0] == 'currentaction'):
 			current()
 	except TypeError:
-		print("Couldn't understand the input!")
+		print("Couldn't understand the input! (TypeError)")
 
 ###iTunes Library handling section
 lib = plistlib._InternalDict()
