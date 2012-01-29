@@ -5,15 +5,14 @@
 import re
 
 def parse(inp, definitions):
-	getactions = re.compile(r'([^\n].*[^,])')
-
-	getactionname = re.compile(r'(^[^:]+)')
+	getactionsr = re.compile(r'([^\n].*[^,])')
+	getactionnamer = re.compile(r'(^[^:]+)')
 	getactionwordsr = re.compile(r'\(([^}]+)\)')
 	splitmultipler = re.compile(r'([^|]+)')
-	#getdatadefr = re.compile(r'@(\w*)')
 	getseperatorsr = re.compile(r'\[([^}]+)\]')
+	#getdatadefr = re.compile(r'@(\w*)')
 
-	actions = getactions.findall(definitions)
+	actions = getactionsr.findall(definitions)
 
 	for action in actions:
 		actionwordsstr = getactionwordsr.findall(action)[0]
@@ -37,7 +36,7 @@ def parse(inp, definitions):
 				else:
 					data.append(datas)
 				#print(data)
-				return(getactionname.findall(action)[0], data)
+				return(getactionnamer.findall(action)[0], data)
 				#threshold+=1
 
 #stolen from http://en.wikibooks.org/wiki/Algorithm_implementation/Strings/Levenshtein_distance#Python

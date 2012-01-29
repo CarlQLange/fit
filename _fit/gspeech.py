@@ -34,5 +34,5 @@ def hear():
 
 def hearandinterpret():
 	r = interpret(hear())
-	print("I think you said '%s'" % r)
+	print("I think you said {0}".format(r))
 	return r

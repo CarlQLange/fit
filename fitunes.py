@@ -122,8 +122,8 @@ def bestmatch(inp, matchto, arg=""):
 				lowest = (trackname, recognise.levenshtein(inp, trackname))
 	else:
 		for trackname in matchto():
-					if (recognise.levenshtein(inp, trackname) < lowest[1]):
-						lowest = (trackname, recognise.levenshtein(inp, trackname))
+			if (recognise.levenshtein(inp, trackname) < lowest[1]):
+				lowest = (trackname, recognise.levenshtein(inp, trackname))
 	return lowest[0]
 
 ###iTunes controller section

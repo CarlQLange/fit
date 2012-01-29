@@ -7,7 +7,7 @@ class posthandler(SimpleHTTPRequestHandler):
 		length = int(self.headers['Content-Length'])
 		post_data = urllib.parse.parse_qs(self.rfile.read(length).decode('utf-8'))
 		print(post_data)
-		os.system('fit "%s"' % post_data["inp"][0])
+		os.system('fit "%s"' % post_data["inp"][0]) #FIXME this is bad bad bad
 		self.send_response(200)
 
 def serve():
