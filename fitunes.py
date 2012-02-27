@@ -32,7 +32,7 @@ def main():
 
 	try:
 		if (action[0] == 'playaction'):
-			st = time.time();
+			#st = time.time();
 
 			if(len(action[1]) > 1):
 				ar = bestmatch(action[1][1], artistnames)
@@ -43,13 +43,13 @@ def main():
 				tr = bestmatch(action[1][0], tracknames)
 				print("Playing %s" % tr)
 				playtrack(tr)
-			print("Took {0} seconds.".format(round(time.time() - st, 3)))
+			#print("Took {0} seconds.".format(round(time.time() - st, 3)))
 		elif (action[0] == 'artistaction'):
-			st = time.time();
+			#st = time.time();
 			ar = bestmatch(action[1][0], artistnames)
 			print("Playing %s" % ar)
 			playartist(ar)
-			print("Took {0} seconds.".format(round(time.time() - st, 3)))
+			#print("Took {0} seconds.".format(round(time.time() - st, 3)))
 		elif (action[0] == 'pauseaction'):
 			print("Paused")
 			pause()
