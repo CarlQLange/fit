@@ -17,6 +17,7 @@ artistaction: {(play songs by|play track by|play music by|play some songs by|i w
 playaction: {(play|i want to hear)@d1[by]@d2},
 pauseaction: {(pause|stop|shut up for a second)},
 currentaction: {(current|whats playing|what song is playing|what song is this|what track is this|whats the name of the current song)}
+repeataction: {(repeat|repeat this song|keep playing this song|put this song on repeat)})
 """
 
 
@@ -64,6 +65,8 @@ def main():
 			current()
 		elif (action[0] == 'listaction'):
 			listsongsbyartist(action[1][0])
+		elif (action[0] == 'repeataction'):
+			repeat()
 	except TypeError:
 		print("Couldn't understand the input! (TypeError)")
 
@@ -192,6 +195,13 @@ def prev():
 	osascript("""
 		tell application "iTunes"
 			previous track
+		end tell
+	""")
+
+def repeat():
+	osascript("""
+		tell application "iTunes"
+			set song repeat of current playlist to one
 		end tell
 	""")
 
