@@ -17,7 +17,8 @@ artistaction: {(play songs by|play track by|play music by|play some songs by|i w
 playaction: {(play|i want to hear)@d1[by]@d2},
 pauseaction: {(pause|stop|shut up for a second)},
 currentaction: {(current|whats playing|what song is playing|what song is this|what track is this|whats the name of the current song)}
-repeataction: {(repeat|repeat this song|keep playing this song|put this song on repeat)})
+repeataction: {(repeat|repeat this song|keep playing this song|put this song on repeat)}),
+stoprepeataction: {(stop repeating this song|stop repeating|don't repeat this song|don't repeat)}
 """
 
 
@@ -34,7 +35,7 @@ def main():
 
 	try:
 		if (action[0] == 'playaction'):
-			st = time.time();
+			#st = time.time();
 
 			if(len(action[1]) > 1):
 				ar = bestmatch(action[1][1], artistnames)
@@ -43,15 +44,15 @@ def main():
 				print("Playing {0} by {1}".format(tr, ar))
 			else:
 				tr = bestmatch(action[1][0], tracknames)
-				print("Playing %s" % tr)
+				print("Playing {0}".format(tr))
 				playtrack(tr)
-			print("Took {0} seconds.".format(round(time.time() - st, 3)))
+			#print("Took {0} seconds.".format(round(time.time() - st, 3)))
 		elif (action[0] == 'artistaction'):
-			st = time.time();
-			ar = bestmatch(action[1][0], artistnames)
+			#st = time.time();
+			#ar = bestmatch(action[1][0], artistnames)
 			print("Playing %s" % ar)
 			playartist(ar)
-			print("Took {0} seconds.".format(round(time.time() - st, 3)))
+			#print("Took {0} seconds.".format(round(time.time() - st, 3)))
 		elif (action[0] == 'pauseaction'):
 			print("Paused")
 			pause()
@@ -67,6 +68,8 @@ def main():
 			listsongsbyartist(action[1][0])
 		elif (action[0] == 'repeataction'):
 			repeat()
+		elif (action[0] == 'stoprepeataction'):
+			stoprepeat()
 	except TypeError:
 		print("Couldn't understand the input! (TypeError)")
 
@@ -126,7 +129,7 @@ def bestmatch(inp, matchto, arg=""):
 		for trackname in matchto(arg):
 			if (recognise.match(inp, trackname) < lowest[1]):
 				lowest = (trackname, recognise.match(inp, trackname))
-				print(lowest)
+				#print(lowest)
 	else:
 		for trackname in matchto():
 			if (recognise.match(inp, trackname) < lowest[1]):
@@ -143,11 +146,19 @@ def current():
 		end tell
 	""")
 
+def currentartist():
+	osascript("""
+		tell application "iTunes"
+			return (get artist of current track)
+		end tell
+	""")
+
 def playtrack(exacttrackname):
 	#play the track with the **EXACT** track name
 	osascript("""
 		tell application "iTunes"
 			play track "{0}"
+			set song repeat of current playlist to off
 		end tell
 	""".format(exacttrackname))
 
@@ -161,6 +172,7 @@ def playtrackbyartist(exacttrackname, exactartistname):
 			repeat with song in mySongs
 				play song
 			end repeat
+			set song repeat of current playlist to off
 		end tell
 	""".format(exactartistname, exacttrackname))
 
@@ -202,6 +214,13 @@ def repeat():
 	osascript("""
 		tell application "iTunes"
 			set song repeat of current playlist to one
+		end tell
+	""")
+
+def stoprepeat():
+	osascript("""
+		tell application "iTunes"
+			set song repeat of current playlist to off
 		end tell
 	""")
 
