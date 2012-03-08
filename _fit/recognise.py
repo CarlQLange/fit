@@ -83,13 +83,16 @@ def _grams(s):
 	i = 0
 	j = 0
 	for ch in s:
-		if i % 3 == 0 and i != 0:
-			tr.append([])
-			tr[j].append(ch)
-			j += 1
-		else:
-			tr[j].append(ch)
-		i += 1
+		if ch != ' ':
+			if i % 3 == 0 and i != 0:
+				tr.append([])
+				tr[j].append(ch)
+				j += 1
+			else:
+				tr[j].append(ch)
+			i += 1
+
+	print(tr)
 	return tr
 
 def _makeStr(ls):
