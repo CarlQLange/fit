@@ -70,7 +70,7 @@ def levenshtein(s1, s2, normalise=False):
 
 def match(s1, s2):
 	score = 0
-	for gr in _grams(s1):
+	for gr in _grams(s1, n=3):
 		if _makeStr(gr) in s2.lower():
 			score -= 1
 	return score
@@ -89,7 +89,6 @@ def _grams(s, n=3):
 			else:
 				tr[j].append(ch)
 			i += 1
-
 	return tr
 
 def _makeStr(ls):
