@@ -76,13 +76,13 @@ def match(s1, s2):
 	return score
 
 #ugly, messy, shit, but it works?
-def _grams(s):
+def _grams(s, n=3):
 	tr = [[]]
-	i = 0
+	i = 1
 	j = 0
 	for ch in s:
 		if ch != ' ':
-			if i % 3 == 0 and i != 0:
+			if i % n == 0 and i != 0 and i != len(s)-1:
 				tr.append([])
 				tr[j].append(ch)
 				j += 1
