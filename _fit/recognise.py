@@ -49,9 +49,7 @@ def parse(inp, definitions):
 
 
 #stolen from http://en.wikibooks.org/wiki/Algorithm_implementation/Strings/Levenshtein_distance#Python
-#need to make this independent of string length!!
 def levenshtein(s1, s2, normalise=False):
-	
 	if len(s1) < len(s2):
 		return levenshtein(s2, s1)
 	if not s1:
@@ -92,7 +90,6 @@ def _grams(s):
 				tr[j].append(ch)
 			i += 1
 
-	print(tr)
 	return tr
 
 def _makeStr(ls):
