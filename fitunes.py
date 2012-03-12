@@ -30,6 +30,12 @@ def main():
 		server.serve()
 		return
 	else:
+		#there's an issue here somewhere with single-quotes
+		#eg:
+		#  $ fit "play we don't eat by adventure club"
+		# Playing Teach Me How To Jerk by Adventure Club
+		#  $ fit "play we dont eat by adventure club"
+		# Playing We Don't Eat by Adventure Club
 		action = recognise.parse(sys.argv[1], definitions)
 	#print(action)
 
