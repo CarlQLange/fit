@@ -21,7 +21,7 @@ def parse(inp, definitions):
 		if getseperatorsr.search(action):
 			seperatorsstr = getseperatorsr.findall(action)[0]
 			seperators = splitmultipler.findall(seperatorsstr)
-
+			
 		for actionw in actionwords:
 			threshold = 5
 
@@ -38,10 +38,18 @@ def parse(inp, definitions):
 				#print(data)
 				return(getactionnamer.findall(action)[0], data)
 				#threshold+=1
+		"""
+		for actionw in actionwords:
+			lowestaction = ("", 9999)
+			if match(inp, actionw) < lowestaction[1]:
+				lowestaction = (actionw, match(inp, actionw))
+	print(lowestaction)
+	"""
+
+
 
 #stolen from http://en.wikibooks.org/wiki/Algorithm_implementation/Strings/Levenshtein_distance#Python
-#need to make this independent of string length!!
-def levenshtein(s1, s2):
+def levenshtein(s1, s2, normalise=False):
 	if len(s1) < len(s2):
 		return levenshtein(s2, s1)
 	if not s1:
@@ -58,3 +66,33 @@ def levenshtein(s1, s2):
 		previous_row = current_row
 
 	return previous_row[-1]
+	
+
+def match(s1, s2):
+	score = 0
+	for gr in _grams(s1, n=3):
+		if _makeStr(gr) in s2.lower():
+			score -= 1
+	return score
+
+#ugly, messy, shit, but it works?
+def _grams(s, n=3):
+	tr = [[]]
+	i = 1
+	j = 0
+	for ch in s:
+		if ch != ' ':
+			if i % n == 0 and i != 0 and i != len(s)-1:
+				tr.append([])
+				tr[j].append(ch)
+				j += 1
+			else:
+				tr[j].append(ch)
+			i += 1
+	return tr
+
+def _makeStr(ls):
+	ret = ""
+	for c in ls:
+		ret += c
+	return ret
