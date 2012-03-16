@@ -146,10 +146,18 @@ def bestmatch(inp, matchto, arg=""):
 def current():
 	#print current track
 	osascript("""
-		tell application "iTunes"
-			if not (exists current track) then return "No song playing."
-			return (get name of current track) & " by " & (get artist of current track)
-		end tell
+		on isrunning()
+			tell application "System Events" to (name of processes) contains "iTunes"
+		end isrunning
+
+		if isrunning()
+			tell application "iTunes"
+				if not (exists current track) then return "No song playing."
+				return (get name of current track) & " by " & (get artist of current track)
+			end tell
+		else
+			return "No song playing."
+		end if
 	""")
 
 def currentartist():
