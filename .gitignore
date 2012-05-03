@@ -1,4 +1,4 @@
 out.flac
 __pycache__
 .DS_Store
-
+*.pyc
