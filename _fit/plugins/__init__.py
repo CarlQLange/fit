@@ -1,1 +1,1 @@
-__all__ = ["iTunes", "Spotify"]
+__all__ = ["iTunes", "Spotify", "Mail"]

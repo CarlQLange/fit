@@ -1,0 +1,4 @@
+{
+	"mailpersonwithsubject":
+		["email $person about $thing", "open a new email to $person about $thing"]
+}
