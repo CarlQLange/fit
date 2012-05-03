@@ -7,22 +7,12 @@
 #in this case it should play the track titled "Derezzed (Remixed By The Glitch Mob)"
 
 import os, sys, plistlib, time
-from _fit import gspeech, recognise
+from _fit import gspeech, recognise, plugins
 
-definitions = """
-listaction: {(list songs by)@d1},
-prevaction: {(previous song|previous|prev|last|go back|back|play the last song|play the previous song)},
-nextaction: {(next song|next|skip|play the next song|play another song)},
-artistaction: {(play songs by|play track by|play music by|play some songs by|i want to listen to)@d1},
-playaction: {(play|i want to hear)@d1[by]@d2},
-pauseaction: {(pause|stop|shut up for a second)},
-currentaction: {(current|whats playing|what song is playing|what song is this|what track is this|whats the name of the current song)}
-repeataction: {(repeat|repeat this song|keep playing this song|put this song on repeat)}),
-stoprepeataction: {(stop repeating this song|stop repeating|don't repeat this song|don't repeat)}
-"""
-
+enabledplugins = ["iTunes"]
 
 def main():
+	'''
 	if sys.argv[1] == 'listen':
 		action = recognise.parse(gspeech.hearandinterpret(), definitions)
 	elif sys.argv[1] == 'serve':
@@ -30,15 +20,30 @@ def main():
 		server.serve()
 		return
 	else:
+	'''
 		#there's an issue here somewhere with single-quotes
 		#eg:
 		#  $ fit "play we don't eat by adventure club"
 		# Playing Teach Me How To Jerk by Adventure Club
 		#  $ fit "play we dont eat by adventure club"
 		# Playing We Don't Eat by Adventure Club
-		action = recognise.parse(sys.argv[1], definitions)
-	#print(action)
 
+	for i in plugins.__all__:
+		__import__("_fit.plugins." + i + ".actions")
+		#sys.modules["_fit.plugins."+i+".actions"].current()
+		desc = sys.modules["_fit.plugins."+i].__descriptions__
+		#FIXME: This won't work with multiple plugins
+		act = ""
+		scr = 99999999
+		for k in desc.keys():
+			t = recognise.parse(sys.argv[1], desc[k])
+			if t[1] < scr:
+				act = k
+				scr = t[1]
+
+		(getattr(sys.modules["_fit.plugins."+i+".actions"], act))()
+
+	"""
 	try:
 		if (action[0] == 'playaction'):
 			#st = time.time();
@@ -78,56 +83,11 @@ def main():
 			stoprepeat()
 	except TypeError:
 		print("Couldn't understand the input! (TypeError)")
-
-###iTunes Library handling section
-lib = plistlib._InternalDict()
-
-def initlib():
-	global lib
-	if (lib == {}):
-		lib = plistlib.readPlist(os.environ['HOME']+"/Music/iTunes/iTunes Music Library.xml") #eww TODO move this somewhere better
-
-def tracknames():
-	initlib()
-	for track in lib["Tracks"]:
-		try:
-			lib["Tracks"][track]["Has Video"]
-		except KeyError:
-			#success! also what am i doing with these exceptions
-			yield lib["Tracks"][track]["Name"]
-
-def artistnames():
-	initlib()
-	artists = set()
-	for track in lib["Tracks"]:
-		try:
-			lib["Tracks"][track]["Has Video"]
-		except KeyError:
-			if lib["Tracks"][track]["Artist"] not in artists:
-				artists.add(lib["Tracks"][track]["Artist"])
-				yield lib["Tracks"][track]["Artist"]
-
-def tracksbyartist(exactartistname):
-	initlib()
-	for track in lib["Tracks"]:
-		try:
-			lib["Tracks"][track]["Has Video"]
-		except KeyError:
-			if (lib["Tracks"][track]["Artist"] == exactartistname):
-				yield(lib["Tracks"][track]["Name"])
-
-def gettrackbyartist(exactartistname):
-	initlib()
-	for track in lib["Tracks"]:
-		try:
-			if (lib["Tracks"][track]["Artist"] == exactartistname):
-				return(lib["Tracks"][track]["Name"])
-				break
-		except KeyError:
-			continue
+	"""
 
 ###Fuzzy text section
 #TODO: I plan on making this a good bit better. Right now I'm going for fastest-possible solution and this works. Ish.
+#need to move this elsewhere
 def bestmatch(inp, matchto, arg=""):
 	#print(inp)
 	lowest = ("", 99999)
@@ -142,6 +102,7 @@ def bestmatch(inp, matchto, arg=""):
 				lowest = (trackname, recognise.match(inp, trackname))
 	return lowest[0]
 
+'''
 ###iTunes controller section
 def current():
 	#print current track
@@ -242,5 +203,6 @@ def osascript(str):
 	#below is a beautiful solution for this problem thanks to Teddy
 	#https://gist.github.com/1532172#gistcomment-71911
 	os.system("osascript - <<EOF" + str + "")
+'''
 
 main()

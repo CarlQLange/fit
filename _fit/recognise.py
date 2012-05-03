@@ -1,10 +1,34 @@
 #recognise.py
 
-#and today's award for worst use of regex goes to...
-
 import re
 
 def parse(inp, definitions):
+	#inp is a str, definitions is an list of str
+	score = 99999999
+	best = ""
+	args = []
+	for defn in definitions:
+		if (len(re.findall(r'(\$\w*)', defn)) > 0):
+			for m in (re.findall(r'(\$\w*)', defn)):
+				#we need to deal with arguments now
+				befr = re.compile(r'(.*)\$\w*')
+				aftr = re.compile(r'\$\w*(.*)')
+
+				print(defn)
+				print(befr.findall(defn))
+
+				#get what's between the two sides
+
+			continue
+		else:
+			cs = match(inp, defn)
+			if cs < score:
+				score = cs
+				best = defn
+
+	return [best,score, args]
+
+	'''
 	getactionsr = re.compile(r'([^\n].*[^,])')
 	getactionnamer = re.compile(r'(^[^:]+)')
 	getactionwordsr = re.compile(r'\(([^}]+)\)')
@@ -45,6 +69,7 @@ def parse(inp, definitions):
 				lowestaction = (actionw, match(inp, actionw))
 	print(lowestaction)
 	"""
+	'''
 
 
 

@@ -1,0 +1,14 @@
+{
+	"current" : 
+		["whats playing", "what song is playing", "what song is this", "what track is this", "whats the name of the current song"],
+	"currentartist" : 
+		["who is this", "who plays this", "what band is this", "whos singing", "who is playing"],
+	"pause" :
+		["pause", "stop", "stop playing", "ssh", "shut up", "unpause"],
+	"next" :
+		["skip this track", "next track"],
+	"last" :
+		["play the last one again", "go back"],
+	"play" :
+		["_ $tr"]
+}
