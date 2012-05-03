@@ -9,17 +9,22 @@ def parse(inp, definitions):
 	args = []
 	for defn in definitions:
 		if (len(re.findall(r'(\$\w*)', defn)) > 0):
-			for m in (re.findall(r'(\$\w*)', defn)):
-				#we need to deal with arguments now
-				befr = re.compile(r'(.*)\$\w*')
-				aftr = re.compile(r'\$\w*(.*)')
+			#we need to deal with arguments now
+			s = re.sub(r"\\\$(\w+)", r"(.*)", re.escape(defn))
+			args = re.findall(s, inp)[0]
 
-				print(defn)
-				print(befr.findall(defn))
+			#now match the rest of the desc (aside from the args)
+			inpwithoutargs = inp
+			defnwithoutargs = defn
+			for a in args:
+				inpwithoutargs = inpwithoutargs.replace(' ' + a, '')
+				defnwithoutargs = defnwithoutargs.replace(' ' + a, '')
 
-				#get what's between the two sides
+			cs = match(inpwithoutargs, defnwithoutargs)
+			if cs < score:
+				score = cs
+				best = defn
 
-			continue
 		else:
 			cs = match(inp, defn)
 			if cs < score:
@@ -27,51 +32,6 @@ def parse(inp, definitions):
 				best = defn
 
 	return [best,score, args]
-
-	'''
-	getactionsr = re.compile(r'([^\n].*[^,])')
-	getactionnamer = re.compile(r'(^[^:]+)')
-	getactionwordsr = re.compile(r'\(([^}]+)\)')
-	splitmultipler = re.compile(r'([^|]+)')
-	getseperatorsr = re.compile(r'\[([^}]+)\]')
-	#getdatadefr = re.compile(r'@(\w*)')
-
-	actions = getactionsr.findall(definitions)
-
-	for action in actions:
-		actionwordsstr = getactionwordsr.findall(action)[0]
-		actionwords = splitmultipler.findall(actionwordsstr)
-		#print(actionwords)
-		if getseperatorsr.search(action):
-			seperatorsstr = getseperatorsr.findall(action)[0]
-			seperators = splitmultipler.findall(seperatorsstr)
-			
-		for actionw in actionwords:
-			threshold = 5
-
-			if (levenshtein(actionw, inp[0:8]) < threshold):
-			#if (re.match(actionw, inp, flags=re.I)):
-				data = []
-				datas = inp.replace(actionw, "")
-				#print(datas)
-				if getseperatorsr.search(action):
-					for seperator in seperators:
-						data = datas.split(seperator)
-				else:
-					data.append(datas)
-				#print(data)
-				return(getactionnamer.findall(action)[0], data)
-				#threshold+=1
-		"""
-		for actionw in actionwords:
-			lowestaction = ("", 9999)
-			if match(inp, actionw) < lowestaction[1]:
-				lowestaction = (actionw, match(inp, actionw))
-	print(lowestaction)
-	"""
-	'''
-
-
 
 #stolen from http://en.wikibooks.org/wiki/Algorithm_implementation/Strings/Levenshtein_distance#Python
 def levenshtein(s1, s2, normalise=False):

@@ -10,5 +10,5 @@
 	"last" :
 		["play the last one again", "go back"],
 	"play" :
-		["_ $tr"]
+		["play $tr by $ar"]
 }

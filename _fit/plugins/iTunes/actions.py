@@ -56,8 +56,21 @@ def last():
 		end tell
 	""")
 
-def play(tr):
-	print("play" + tr)
+def play(tr, ar):
+	ar = bestmatch(ar, artistnames)
+	tr = bestmatch(tr, tracksbyartist, arg=ar)
+
+	print("Playing " + tr + " by " + ar)
+
+	osascript("""
+		tell application "iTunes"
+			set mySongs to every track of library playlist 1 whose artist is "{0}" and name is "{1}"
+			repeat with song in mySongs
+				play song
+			end repeat
+			set song repeat of current playlist to off
+		end tell
+	""".format(ar, tr))
 
 def osascript(str):
 	os.system("osascript - <<EOF" + str + "")
@@ -107,3 +120,16 @@ def gettrackbyartist(exactartistname):
 				break
 		except KeyError:
 			continue
+
+
+def bestmatch(inp, matchto, arg=""):
+	lowest = ("", 999999)
+	if (arg != ""):
+		for trackname in matchto(arg):
+			if (recognise.match(inp, trackname) < lowest[1]):
+				lowest = (trackname, recognise.match(inp, trackname))
+	else:
+		for trackname in matchto():
+			if (recognise.match(inp, trackname) < lowest[1]):
+				lowest = (trackname, recognise.match(inp, trackname))
+	return lowest[0]
