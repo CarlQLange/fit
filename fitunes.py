@@ -9,7 +9,7 @@
 import os, sys, plistlib, time
 from _fit import gspeech, recognise, plugins
 
-enabledplugins = ["iTunes"]
+enabledplugins = ["Spotify"]
 
 def main():
 	'''
@@ -29,6 +29,8 @@ def main():
 		# Playing We Don't Eat by Adventure Club
 
 	for i in plugins.__all__:
+		if i not in enabledplugins:
+			continue
 		__import__("_fit.plugins." + i + ".actions")
 		#sys.modules["_fit.plugins."+i+".actions"].current()
 		desc = sys.modules["_fit.plugins."+i].__descriptions__
