@@ -8,5 +8,7 @@
 	"next":
 		["skip this track", "next track", "next"],
 	"prev":
-		["play the last one again", "go back", "last"]
+		["play the last one again", "go back", "last"],
+	"play":
+		["play $tr by $ar"]
 }

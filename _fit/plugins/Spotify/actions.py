@@ -39,3 +39,7 @@ def playpause():
 			playpause
 		end tell
 	""")
+
+def play(tr, ar):
+	#I kind of doubt I can get this to work
+	print(tr, ar)
