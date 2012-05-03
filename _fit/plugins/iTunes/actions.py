@@ -1,4 +1,5 @@
 import plistlib, os
+import _fit.recognise as recognise
 
 def current():
 	#print current track

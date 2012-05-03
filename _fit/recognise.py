@@ -8,10 +8,13 @@ def parse(inp, definitions):
 	best = ""
 	args = []
 	for defn in definitions:
-		if (len(re.findall(r'(\$\w*)', defn)) > 0):
+		if ('$' in defn):
 			#we need to deal with arguments now
 			s = re.sub(r"\\\$(\w+)", r"(.*)", re.escape(defn))
-			args = re.findall(s, inp)[0]
+			try:
+				args = re.findall(s, inp)[0]
+			except IndexError:
+				pass
 
 			#now match the rest of the desc (aside from the args)
 			inpwithoutargs = inp
@@ -21,8 +24,8 @@ def parse(inp, definitions):
 				defnwithoutargs = defnwithoutargs.replace(' ' + a, '')
 
 			cs = match(inpwithoutargs, defnwithoutargs)
-			if cs < score:
-				score = cs
+			if cs-1 < score: #FIXME hack crap here
+				score = cs-1
 				best = defn
 
 		else:
