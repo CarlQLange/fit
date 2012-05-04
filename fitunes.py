@@ -23,9 +23,9 @@ def main():
 	scr = 99999999
 	args = []
 
-	for i in plugins.__all__:
-		if i not in enabledplugins:
-			continue
+	actingplugins = [pl for pl in plugins.__all__ if pl in enabledplugins]
+
+	for i in actingplugins:
 		__import__("_fit.plugins." + i + ".actions")
 		
 		desc = sys.modules["_fit.plugins."+i].__descriptions__
