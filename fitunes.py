@@ -3,7 +3,7 @@
 import os, sys, plistlib, time
 from _fit import gspeech, recognise, plugins
 
-enabledplugins = ["Update"]
+enabledplugins = ["Spotify", "iTunes"]
 
 def main():
 	if len(sys.argv) == 1:
@@ -18,16 +18,18 @@ def main():
 		server.serve()
 		return
 
+	#FIXME: This might not work well with multiple plugins
+	act = ""
+	scr = 99999999
+	args = []
+
 	for i in plugins.__all__:
 		if i not in enabledplugins:
 			continue
 		__import__("_fit.plugins." + i + ".actions")
 		
 		desc = sys.modules["_fit.plugins."+i].__descriptions__
-		#FIXME: This might not work well with multiple plugins
-		act = ""
-		scr = 99999999
-		args = []
+		
 		for k in desc.keys():
 			t = recognise.parse(sys.argv[1], desc[k])
 			if t[1] < scr:
@@ -35,6 +37,6 @@ def main():
 				scr = t[1]
 				args = t[2]
 
-		(getattr(sys.modules["_fit.plugins."+i+".actions"], act))(*args)
+	(getattr(sys.modules["_fit.plugins."+i+".actions"], act))(*args)
 
 main()
