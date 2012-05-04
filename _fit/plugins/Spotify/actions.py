@@ -1,4 +1,6 @@
 import os
+import urllib.request
+import re
 
 def osascript(str):
 	os.system("osascript - <<EOF" + str + "")
@@ -42,4 +44,14 @@ def playpause():
 
 def play(tr, ar):
 	#I kind of doubt I can get this to work
-	print(tr, ar)
+	url = "http://cleanify.net/play/track/" + ar.replace(' ', '-').lower() + "/" + tr.replace(' ', '-').lower()
+
+	t = urllib.request.urlopen(url)
+	st = str(t.readlines())
+	try:
+		f = re.findall(r'(spotify:track:\w+)', st)[0]
+		os.system("open {0}".format(f))
+	except IndexError:
+		print("Couldn't find that track. Try searching in Spotify.")
+		print("Due to the way I'm built, I may not find songs that are not well known.")
+	#well, I sure showed me

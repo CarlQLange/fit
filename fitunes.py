@@ -3,7 +3,7 @@
 import os, sys, plistlib, time
 from _fit import gspeech, recognise, plugins
 
-enabledplugins = ["Mail"]
+enabledplugins = ["Spotify"]
 
 def main():
 	if len(sys.argv) == 1:
